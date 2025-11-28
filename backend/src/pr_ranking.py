@@ -1,16 +1,3 @@
-#from parser import get_all_tournaments_info
-#import matplotlib.pyplot as plt
-#from datetime import datetime
-#import pytz
-#from matplotlib import colors as mcolors
-#import random
-
-"""
-colors_dict = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
-colors = list(colors_dict.values())
-random.shuffle(colors)
-"""
-
 POINT_GAINED = {
     1: 75,
     2: 60,
@@ -61,39 +48,3 @@ def calculate_scores(tournaments_info: list) -> dict:
 
     return score_per_participant
 
-"""
-def plot_scores_on_time(scores: dict):
-    
-    now = datetime.now()
-    timezone = pytz.timezone("Europe/Paris")
-    aware = timezone.localize(now)
-    offset = aware.utcoffset()
-    i = 0
-    for participant, s in scores.items():
-        times = [t[0] for t in s]
-        participant_scores = [t[1] for t in s]
-        plt.step([datetime.strptime(t.split("+")[0], "%Y-%m-%dT%H:%M:%S.%f") + offset for t in times] + [datetime.now()], participant_scores + [participant_scores[-1]], label=participant, where='post', color=colors[i])
-        i += 1
-
-    plt.legend(loc = "upper left", ncol=3)
-    plt.show()
-
-if __name__ == "__main__":
-    community_id = "a15d0f5c0bca77b6da348af7"
-    tournaments_info = get_all_tournaments_info(community_id)
-    complete_score = calculate_scores(tournaments_info)
-
-    for i in range(len(tournaments_info)):
-        final_scores = [(participant, max((s[1] for s in scores if s[0] <= tournaments_info[i]["time"]), default=-1)) for participant, scores in complete_score.items()]
-        final_scores = [f for f in final_scores if f[1] != -1]
-        final_scores.sort(key=lambda x: x[1])
-        j = len(final_scores)
-        for participant, score in final_scores:
-            print(f"{j} {participant}: {score}")
-            j -= 1
-
-        input()
-
-    #plot_scores_on_time(complete_score)
-
-"""
