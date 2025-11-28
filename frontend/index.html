@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  const request = new Request("http://localhost/api/get_pr_ranking", {
+    method: "GET",
+  })
+
+  const json = fetch(request).then((response) => {
+    response.json().then((value) => {
+      
+      var value_parsed = []
+
+      Object.keys(value).forEach((key) => {
+        value_parsed.push([key, value[key]])
+      })
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: value_parsed.map((v) => {
+            return {
+              label: v[0],
+              data: v[1].map((n) => {
+                return {x: Date.parse(n[0]), y: n[1]}
+              }),
+              stepped: true,
+            };
+          })
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            },
+            x: {
+              type: 'time' 
+            },
+          }
+        }
+      });
+    })
+  })
+
+</script>
+

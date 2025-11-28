@@ -1,0 +1,15 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: no
+    ports: 
+      - 80:80
+    volumes:
+      - ./frontend:/etc/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+  backend:
+    container_name: backend 
+    build: ./backend
+    restart: no
