@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <div>
   <canvas id="myChart"></canvas>
+  <ol id="list"></ol>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -8,6 +9,7 @@
 
 <script>
   const ctx = document.getElementById('myChart');
+  const list = document.getElementById('list');
 
   const request = new Request("http://localhost/api/get_pr_ranking", {
     method: "GET",
@@ -21,6 +23,13 @@
       Object.keys(value).forEach((key) => {
         value_parsed.push([key, value[key]])
       })
+
+      list.innerHTML = value_parsed
+        .sort((a, b) => a[1][a[1].length - 1][1] - b[1][b[1].length-1][1])
+        .reverse()
+        .map((v) => {
+          return `<li>${v[0]}: ${v[1][v[1].length -1][1]}</li>`;
+      }).join('');
 
       new Chart(ctx, {
         type: 'line',

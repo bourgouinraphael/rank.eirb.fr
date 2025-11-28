@@ -1,4 +1,4 @@
-from parser import get_all_tournaments_info
+#from parser import get_all_tournaments_info
 #import matplotlib.pyplot as plt
 #from datetime import datetime
 #from matplotlib import colors as mcolors
@@ -180,7 +180,6 @@ def plot_elo_scores_by_time(elo_scores: list):
 
     plt.legend(loc = "upper left")
     plt.show()
-"""
 
 if __name__ == "__main__":
     community_id = "a15d0f5c0bca77b6da348af7"
@@ -192,6 +191,6 @@ if __name__ == "__main__":
     elo_scores_hist = calculate_elo_scores_to_graph(tournaments_info)
     #plot_elo_scores(elo_scores_hist)
     #plot_elo_scores_by_time(elo_scores_hist)
-
+"""
     
 
