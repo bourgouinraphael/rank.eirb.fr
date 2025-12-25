@@ -1,27 +1,15 @@
-#from parser import get_all_tournaments_info
-#import matplotlib.pyplot as plt
-#from datetime import datetime
-#from matplotlib import colors as mcolors
-#import random
-#import pytz
-
+from datetime import datetime
 
 STARTING_ELO = 1000
 ELO_MULTIPLICATIVE_FACTOR = 100
 NUMBER_OF_EVAL_GAMES = 5
 NUMBER_OF_DAYS_BEFORE_INACTIVE = 15
 
-"""
-colors_dict = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
-colors = list(colors_dict.values())
-random.shuffle(colors)
-"""
-
 def calculate_developpement_factor(number_of_games):
     if number_of_games <= NUMBER_OF_EVAL_GAMES:
-        return 45 - 5*number_of_games
+        return 35 - 5*number_of_games
     
-    return 20
+    return 10
 
 def calculate_expected_score_diff(player_1_elo: float, player_2_elo: float) -> float:
     elo_diff = player_1_elo - player_2_elo
@@ -74,45 +62,13 @@ def group_matches(tournaments: list) -> list:
 
     return matches
 
-def calculate_elo_scores(tournaments: list) -> list:
-    elo_scores_dict = {}
-    number_of_games = {}
-
-    matches = group_matches(tournaments)
-    for m in matches:
-        player_1_name = m["participants"][0]
-        player_2_name = m["participants"][1]
-
-        if elo_scores_dict.get(player_1_name, None) is None:
-            elo_scores_dict[player_1_name] = STARTING_ELO
-            number_of_games[player_1_name] = 0
-
-        if elo_scores_dict.get(player_2_name, None) is None:
-            elo_scores_dict[player_2_name] = STARTING_ELO
-            number_of_games[player_2_name] = 0
-        
-        player_1_new_score, player_2_new_score, match_played = update_elo_with_match(m, elo_scores_dict[player_1_name], elo_scores_dict[player_2_name], number_of_games)
-
-        if match_played:
-            elo_scores_dict[player_1_name] = player_1_new_score
-            elo_scores_dict[player_2_name] = player_2_new_score
-            number_of_games[player_1_name] += 1
-            number_of_games[player_2_name] += 1
-
-    elo_scores = [(participant, score) for participant, score in elo_scores_dict.items() if number_of_games[participant] >= NUMBER_OF_EVAL_GAMES]
-    elo_scores.sort(key=lambda x: x[1])
-
-    if elo_scores is None:
-        raise Exception
-
-    return elo_scores
-
-def calculate_elo_scores_to_graph(tournaments: list) -> list:
+def calculate_elo_scores(tournaments: list) -> dict:
     elo_scores_dict = {}
     number_of_games = {}
     times = {}
 
     matches = group_matches(tournaments)
+    last_match_time = ""
     for m in matches:
         player_1_name = m["participants"][0]
         player_2_name = m["participants"][1]
@@ -136,61 +92,10 @@ def calculate_elo_scores_to_graph(tournaments: list) -> list:
             times[player_2_name].append(m["updated_at"])
             number_of_games[player_1_name] += 1
             number_of_games[player_2_name] += 1
+            last_match_time = m["updated_at"]
 
-    elo_scores = [(participant, score, times[participant]) for participant, score in elo_scores_dict.items()]
-    elo_scores.sort(key=lambda x: x[1][-1], reverse=True)
-
-    if elo_scores is None:
-        raise Exception
+    elo_scores = {name: [(time, elo) for time, elo in zip(times[name], elo_scores_dict[name][1:])] for name in elo_scores_dict.keys()}
+    elo_scores = {name: content for name, content in elo_scores.items() if len(content) >= NUMBER_OF_EVAL_GAMES}
+    elo_scores = {name: content for name, content in elo_scores.items() if (datetime.strptime(last_match_time, "%Y-%m-%dT%H:%M:%S.%fZ") - datetime.strptime(content[-1][0], "%Y-%m-%dT%H:%M:%S.%fZ")).days < NUMBER_OF_DAYS_BEFORE_INACTIVE}
 
     return elo_scores
-
-"""
-def plot_elo_scores(elo_scores: list):
-
-    max_number_of_games = max(len(s) for _, s, _ in elo_scores)
-    i = 0
-
-    for participant, scores, _ in elo_scores:
-        if len(scores) < NUMBER_OF_EVAL_GAMES + 1:
-            continue
-        plt.plot(range(len(scores)), scores, label=participant, color=colors[i])
-        plt.scatter([max_number_of_games], [scores[-1]], color=colors[i])
-
-        i += 1
-
-    plt.legend(loc = "upper left")
-    plt.show()
-
-def plot_elo_scores_by_time(elo_scores: list):
-
-    now = datetime.now()
-    timezone = pytz.timezone("Europe/Paris")
-    aware = timezone.localize(now)
-    offset = aware.utcoffset()
-    i = 0
-    for participant, scores, times in elo_scores:
-        if len(scores) < NUMBER_OF_EVAL_GAMES + 1:
-            continue
-        converted_times = [datetime.strptime(t, "%Y-%m-%dT%H:%M:%S.%fZ") + offset for t in times]
-        if (datetime.now() - converted_times[-1]).total_seconds() >= NUMBER_OF_DAYS_BEFORE_INACTIVE*24*3600:
-            continue
-        plt.step(converted_times + [datetime.now()], scores[1:] + [scores[-1]], label=participant, where='post', color=colors[i])
-        i += 1
-
-    plt.legend(loc = "upper left")
-    plt.show()
-
-if __name__ == "__main__":
-    community_id = "a15d0f5c0bca77b6da348af7"
-    tournaments_info = get_all_tournaments_info(community_id)
-    elo_scores = calculate_elo_scores(tournaments_info)
-    for participant, score in elo_scores:
-        print(f"{participant}: {score}")
-
-    elo_scores_hist = calculate_elo_scores_to_graph(tournaments_info)
-    #plot_elo_scores(elo_scores_hist)
-    #plot_elo_scores_by_time(elo_scores_hist)
-"""
-    
-

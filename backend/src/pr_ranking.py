@@ -20,13 +20,15 @@ WEIGHT_BY_TOURNAMENT = {
     "s8qpjgaz": 7, # PKT1
     "5vx9rv0b": 2.25, #PKF5
     "ohnm2yke": 2.25, #PKF6
-    "cpcpl0ng": 2.25  #PKF7
+    "cpcpl0ng": 2.25,  #PKF7
+    "spvaky9d": 2.25, #PKF8
+    "rwwddc57": 4, # PKF9
 }
 
 def ranking_formula(tournaments_propreties: list) -> float:
     return sum(w*POINT_GAINED[r] for _, w, r in tournaments_propreties)/(1 + 0.22*sum(w for _, w, _ in tournaments_propreties)**0.8)
 
-def calculate_scores(tournaments_info: list) -> dict:
+def calculate_pr_scores(tournaments_info: list) -> dict:
     rankings_per_participants = {}
 
     for tournament in tournaments_info:

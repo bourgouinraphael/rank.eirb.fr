@@ -1,68 +1,77 @@
 <!DOCTYPE html>
 <div>
-  <canvas id="myChart"></canvas>
-  <ol id="list"></ol>
+  <canvas id="prGraph"></canvas>
+  <ol id="prList"></ol>
+
+  <canvas id="eloGraph"></canvas>
+  <ol id="eloList"></ol>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 <script>
-  const ctx = document.getElementById('myChart');
-  const list = document.getElementById('list');
+function makeGraphAndList(graphElement, listElement, requestName, beginYAtZero, title){
+	const graph = document.getElementById(graphElement);
+	const list = document.getElementById(listElement);
 
-  const request = new Request("http://localhost/api/get_pr_ranking", {
-    method: "GET",
-  })
+	console.log()
+	const request = new Request("http://localhost/api/" + requestName, {
+		method: "GET",
+	})
 
-  const json = fetch(request).then((response) => {
-    response.json().then((value) => {
-      
-      var value_parsed = []
+	const json = fetch(request).then((response) => {
+		response.json().then((value) => {
 
-      Object.keys(value).forEach((key) => {
-        value_parsed.push([key, value[key]])
-      })
+			var value_parsed = []
 
-      list.innerHTML = value_parsed
-        .sort((a, b) => a[1][a[1].length - 1][1] - b[1][b[1].length-1][1])
-        .reverse()
-        .map((v) => {
-          return `<li>${v[0]}: ${v[1][v[1].length -1][1]}</li>`;
-      }).join('');
+			Object.keys(value).forEach((key) => {
+				value_parsed.push([key, value[key]])
+			})
 
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          datasets: value_parsed.map((v) => {
-            return {
-              label: v[0],
-              data: v[1].map((n) => {
-                return {x: Date.parse(n[0]), y: n[1]}
-              }),
-              stepped: true,
-            };
-          })
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            },
-            x: {
-              type: 'time' 
-            },
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: "PR Smash'eirb saison 1"
-            }
-          }
-        }
-      });
-    })
-  })
+			console.log(value_parsed)
+			list.innerHTML = value_parsed
+				.sort((a, b) => a[1][a[1].length - 1][1] - b[1][b[1].length-1][1])
+				.reverse()
+				.map((v) => {
+					return `<li>${v[0]}: ${v[1][v[1].length -1][1]}</li>`;
+				}).join('');
 
+			new Chart(graph, {
+				type: 'line',
+				data: {
+					datasets: value_parsed.map((v) => {
+						return {
+							label: v[0],
+							data: v[1].map((n) => {
+								return {x: Date.parse(n[0]), y: n[1]}
+							}),
+							stepped: true,
+						};
+					})
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: beginYAtZero
+						},
+						x: {
+							type: 'time' 
+						},
+					},
+					plugins: {
+						title: {
+							display: true,
+							text: title
+						}
+					}
+				}
+			});
+		})
+	})
+}
+
+makeGraphAndList("prGraph", "prList", "get_pr_ranking", true, "PR Smash'eirb saison 1")
+makeGraphAndList("eloGraph", "eloList", "get_elo_ranking", false, "Elo Smash'eirb saison 1")
 </script>
 

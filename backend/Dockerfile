@@ -4,6 +4,7 @@ WORKDIR /usr/local/app
 
 ENV FLASK_APP=src/app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+ENV PYTHONUNBUFFERED=TRUE
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
@@ -14,4 +15,4 @@ WORKDIR ./src
 RUN useradd app
 USER app 
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-w 8", "-b", "0.0.0.0:5000", "--enable-stdio-inheritance", "app:app"]
