@@ -23,6 +23,16 @@ WEIGHT_BY_TOURNAMENT = {
     "cpcpl0ng": 2.25,  #PKF7
     "spvaky9d": 2.25, #PKF8
     "rwwddc57": 4, # PKF9
+    #============== Saison 2 =============
+    "xlyc40s7": 1.5,
+    "z8fmjkuk": 8,
+    "u6d0larl": 2,
+    "ckyh7n6m": 3,
+    "ky8z1ukw": 1.5,
+    "9ug6n3oe": 4,
+    "2g64tkut": 1.5,
+    "cdm8qmgw": 4,
+    "v5gmufc8": 1.5
 }
 
 def ranking_formula(tournaments_propreties: list) -> float:

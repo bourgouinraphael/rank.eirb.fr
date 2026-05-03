@@ -86,10 +86,12 @@ def parse_tournament_list(tournaments: dict) -> list:
 
     return parsed_tournament_list
 
-def get_all_tournaments_info(community_id: str) -> list:
-    tournaments = get_tournament_list(community_id)
-    parsed_tournament_list = parse_tournament_list(tournaments)
-    tournaments_info = [get_tournament_info(t[0], t[1], community_id, t[2]) for t in parsed_tournament_list]
+def get_all_tournaments_info(communities_id: list) -> list:
+    tournaments_info = []
+    for community_id in communities_id:
+        tournaments = get_tournament_list(community_id)
+        parsed_tournament_list = parse_tournament_list(tournaments)
+        tournaments_info.extend([get_tournament_info(t[0], t[1], community_id, t[2]) for t in parsed_tournament_list])
     return tournaments_info
 
 

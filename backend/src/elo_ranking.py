@@ -3,7 +3,7 @@ from datetime import datetime
 STARTING_ELO = 1000
 ELO_MULTIPLICATIVE_FACTOR = 100
 NUMBER_OF_EVAL_GAMES = 5
-NUMBER_OF_DAYS_BEFORE_INACTIVE = 15
+NUMBER_OF_DAYS_BEFORE_INACTIVE = 30
 
 def calculate_developpement_factor(number_of_games):
     if number_of_games <= NUMBER_OF_EVAL_GAMES:
