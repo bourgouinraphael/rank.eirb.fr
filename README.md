@@ -28,12 +28,12 @@ After that, it will show the graphs and current standings according to the pr an
 ## Changing communities
 
 To change the communities that are analysed by the app, change the list `communities` present in the `./backend/src/app.py` file
-This list contains community ids, which can be found inside the link of communities (for example https://challonge.com/communities/`2e83a668fc9b0698f4ca2a09` for season 2)
+This list contains community ids, which can be found inside the link of communities (for example https://challonge.com/communities/2e83a668fc9b0698f4ca2a09 would give `2e83a668fc9b0698f4ca2a09 ` for season 2)
 
 ## Add weights for the PR calculations
 
 Inside the `./backend/src/pr_ranking.py` file, the list `WEIGHT_BY_TOURNAMENT` contains the weight of each tournaments.
-The tournaments are designated by their tournament ids, which can be found in their links (for example https://challonge.com/`9ug6n3oe`)
+The tournaments are designated by their tournament ids, which can be found in their links (for example https://challonge.com/9ug6n3oe would give `9ug6n3oe`)
 
 ## Visualisation
 
