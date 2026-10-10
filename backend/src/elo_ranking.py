@@ -1,5 +1,6 @@
 from datetime import datetime
 
+# Constants for elo calculation
 STARTING_ELO = 1000
 ELO_MULTIPLICATIVE_FACTOR = 100
 NUMBER_OF_EVAL_GAMES = 5

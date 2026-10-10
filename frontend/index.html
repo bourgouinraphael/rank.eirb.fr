@@ -16,7 +16,7 @@ function makeGraphAndList(graphElement, listElement, requestName, beginYAtZero, 
 	const list = document.getElementById(listElement);
 
 	console.log()
-	const request = new Request("http://localhost/api/" + requestName, {
+	const request = new Request("http://localhost:8080/api/" + requestName, {
 		method: "GET",
 	})
 

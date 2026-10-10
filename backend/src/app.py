@@ -8,10 +8,12 @@ communities = ["a15d0f5c0bca77b6da348af7", "2e83a668fc9b0698f4ca2a09"]
 
 @app.route('/get_pr_ranking')
 def get_pr_ranking():
+    print("Start working on pr ranking", flush=True)
     tournaments = get_all_tournaments_info(communities[-1:])
     return calculate_pr_scores(tournaments)
 
 @app.route('/get_elo_ranking')
 def get_elo_ranking():
+    print("Start working on elo ranking", flush=True)
     tournaments = get_all_tournaments_info(communities)
     return calculate_elo_scores(tournaments)

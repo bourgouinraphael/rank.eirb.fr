@@ -1,3 +1,4 @@
+# The points gained for each position
 POINT_GAINED = {
     1: 75,
     2: 60,
@@ -11,6 +12,7 @@ POINT_GAINED = {
     25: 10
 }
 
+# Weights of each tournament
 WEIGHT_BY_TOURNAMENT = {
     "ey5d6c0e": 7, # WEES 2025
     "3da4jzp9": 2, # PK1
@@ -36,9 +38,23 @@ WEIGHT_BY_TOURNAMENT = {
 }
 
 def ranking_formula(tournaments_propreties: list) -> float:
+    """
+    Calculates the rank of someone 
+    tournaments_propreties is a list of tuple containg the weight of the tournament (w) and ranking of the participant (r)
+    """
     return sum(w*POINT_GAINED[r] for _, w, r in tournaments_propreties)/(1 + 0.22*sum(w for _, w, _ in tournaments_propreties)**0.8)
 
 def calculate_pr_scores(tournaments_info: list) -> dict:
+    """
+    Calculates the pr scores for all participants after each tournament
+    score_per_participant uses the following format:
+    score_per_participant = {
+            player1: [(time_tournament1, pr_score_at_tournament1), (time_tournament2, pr_score_at_tournament2), ...],
+            player2: [(time_tournament1, pr_score_at_tournament1), (time_tournament3, pr_score_at_tournament3), ...],
+            ...
+    }
+    (Note that players can skip tournaments)
+    """
     rankings_per_participants = {}
 
     for tournament in tournaments_info:

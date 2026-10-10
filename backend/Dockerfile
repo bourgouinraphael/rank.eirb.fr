@@ -15,4 +15,5 @@ WORKDIR ./src
 RUN useradd app
 USER app 
 
-CMD ["gunicorn", "-w 8", "-b", "0.0.0.0:5000", "--enable-stdio-inheritance", "app:app"]
+CMD ["flask", "--app", "app", "run", "--host", "0.0.0.0"]
+# CMD ["gunicorn", "-w 8", "-b", "0.0.0.0:5000", "--log-level", "debug", "app:app"]
