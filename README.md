@@ -6,7 +6,7 @@ It could enjoy a full rewrite if someone is motivated enough.
 
 ## Requirements
 
-To run the full stack (with the graphics display), you need to have `docker` and `docker compose` installed.
+To run the full stack (with the graph display), you need to have `docker` and `docker compose` installed.
 
 ## Get an challonge Api v1 key
 
